@@ -17,12 +17,17 @@ const favicon = document.getElementById("favicon");
 const playbackStatus = document.getElementById("playback-status");
 const rows = document.querySelectorAll(".movements li");
 let activePlanet;
-let needsActivation = false;
 let lastSync = -Infinity;
 
 function showStatus(message) {
   playbackStatus.textContent = message;
   playbackStatus.hidden = !message;
+}
+
+function showStartPrompt() {
+  if (audio.paused && !audio.error) {
+    showStatus("Tap anywhere or press Enter to start listening.");
+  }
 }
 
 function updateProgress() {
@@ -64,10 +69,9 @@ async function startPlayback() {
   try {
     await audio.play();
   } catch (error) {
-    if (error.name === "NotAllowedError") {
-      needsActivation = true;
-      showStatus("Tap anywhere or press Enter to start listening.");
-    } else if (error.name !== "AbortError") {
+    if (error.name === "NotAllowedError" || error.name === "AbortError") {
+      showStartPrompt();
+    } else {
       showStatus("The recording couldn't play. Please reload the page.");
     }
   }
@@ -88,28 +92,33 @@ function startWhenReady() {
 
 audio.addEventListener("timeupdate", updateProgress);
 audio.addEventListener("canplay", startWhenReady, { once: true });
+audio.addEventListener("pause", showStartPrompt);
 audio.addEventListener("playing", () => {
-  needsActivation = false;
+  if (audio.paused) {
+    showStartPrompt();
+    return;
+  }
   showStatus("");
   synchronizePlayback();
 });
 audio.addEventListener("error", () => {
-  needsActivation = false;
   showStatus("The recording couldn't load. Please reload the page.");
 });
 
-// A gesture joins the current UTC position if autoplay was blocked.
+// A gesture joins the current UTC position whenever playback is paused.
 document.addEventListener("click", (event) => {
-  if (needsActivation && !event.target.closest("a")) startPlayback();
+  if (audio.paused && !audio.error && !event.target.closest("a")) startPlayback();
 });
 document.addEventListener("keydown", (event) => {
-  if (needsActivation && !event.repeat && ["Enter", " "].includes(event.key) && !event.target.closest("a")) {
+  if (audio.paused && !audio.error && !event.repeat && ["Enter", " "].includes(event.key) && !event.target.closest("a")) {
     event.preventDefault();
     startPlayback();
   }
 });
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden && !audio.paused) synchronizePlayback();
+  if (document.hidden) return;
+  if (audio.paused) showStartPrompt();
+  else synchronizePlayback();
 });
 setInterval(() => {
   if (!audio.paused) synchronizePlayback();
