@@ -64,7 +64,12 @@ function initialize() {
   updateProgress();
 }
 
+function startWhenReady() {
+  if (audio.paused) startPlayback();
+}
+
 audio.addEventListener("timeupdate", updateProgress);
+audio.addEventListener("canplay", startWhenReady, { once: true });
 audio.addEventListener("playing", () => {
   needsActivation = false;
   showStatus("");
@@ -87,4 +92,4 @@ document.addEventListener("keydown", (event) => {
 
 if (audio.readyState >= 1) initialize();
 else audio.addEventListener("loadedmetadata", initialize, { once: true });
-startPlayback();
+if (audio.readyState >= 3) startWhenReady();

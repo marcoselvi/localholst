@@ -4,7 +4,9 @@ A small static site that plays Gustav Holst's *The Planets*, Op. 32, on repeat.
 
 `index.html` contains a native audio element, a read-only progress bar, and the
 movement list; `styles.css` controls the presentation. `player.js` starts at a
-uniformly random point across the recording and the audio element loops the suite.
+uniformly random point across the recording. The native audio element handles
+autoplay and looping; a playback request after the audio becomes playable detects
+whether the browser requires a gesture.
 There are no pause, seek, or volume controls. When a browser blocks autoplay, a
 one-time tap or Enter/Space starts playback; the prompt disappears once playing.
 There is no build step or backend.
