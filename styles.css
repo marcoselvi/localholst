@@ -1,0 +1,84 @@
+:root {
+  color-scheme: dark;
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  color: #ece9e1;
+  background: #11151c;
+  line-height: 1.6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 7vw, 5rem) 1.5rem;
+}
+
+.wordmark {
+  margin: 0 0 2.5rem;
+  color: #d7bc83;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.06em;
+}
+
+.subtitle,
+.hint,
+footer,
+.movements li span:last-child {
+  color: #a7afb9;
+}
+
+section {
+  margin: 2rem 0;
+}
+
+audio {
+  display: block;
+  width: 100%;
+}
+
+.hint,
+footer {
+  font-size: 0.8rem;
+}
+
+.movements {
+  margin: 2rem 0;
+  padding-left: 2rem;
+  list-style-type: upper-roman;
+}
+
+.movements li {
+  padding: 0.65rem 0 0.65rem 0.5rem;
+  border-bottom: 1px solid #2a3039;
+}
+
+.movements li span:last-child {
+  display: block;
+  font-size: 0.85rem;
+}
+
+footer {
+  margin-top: 2.5rem;
+}
+
+a {
+  color: #d7bc83;
+  text-underline-offset: 0.2em;
+}
+
+a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
