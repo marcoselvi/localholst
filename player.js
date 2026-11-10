@@ -1,78 +1,90 @@
-const playlist = "OLAK5uy_nxaAAl0akbZ3b1GtEV4I6l25bW_NFIdDI";
+// Movement onsets in the NYO Canada Calgary MP3; tied to this recording.
 const movements = [
-  { planet: "mars", duration: 441 },
-  { planet: "venus", duration: 517 },
-  { planet: "mercury", duration: 256 },
-  { planet: "jupiter", duration: 456 },
-  { planet: "saturn", duration: 562 },
-  { planet: "uranus", duration: 363 },
-  { planet: "neptune", duration: 527 },
+  { planet: "mars", start: 0 },
+  { planet: "venus", start: 383.4 },
+  { planet: "mercury", start: 843.2 },
+  { planet: "jupiter", start: 1087.7 },
+  { planet: "saturn", start: 1554.4 },
+  { planet: "uranus", start: 2100.6 },
+  { planet: "neptune", start: 2452.8 },
 ];
+const audio = document.getElementById("audio");
+const progress = document.getElementById("progress");
 const favicon = document.getElementById("favicon");
-const status = document.getElementById("playback-status");
-const playButton = document.getElementById("play");
-let player;
+const playbackStatus = document.getElementById("playback-status");
+const rows = document.querySelectorAll(".movements li");
+let activePlanet;
+let needsActivation = false;
 
-// Pick uniformly across the suite's duration, then locate the movement.
-let startSeconds = Math.floor(Math.random() * movements.reduce((sum, movement) => sum + movement.duration, 0));
-let index = 0;
-while (startSeconds >= movements[index].duration) {
-  startSeconds -= movements[index].duration;
-  index += 1;
+function showStatus(message) {
+  playbackStatus.textContent = message;
+  playbackStatus.hidden = !message;
 }
 
-function updateFavicon(movementIndex) {
-  const movement = movements[movementIndex];
-  if (movement) favicon.href = `./favicons/${movement.planet}.svg`;
+function updateProgress() {
+  progress.value = audio.currentTime;
+  let movement = movements[0];
+  for (const candidate of movements) {
+    if (audio.currentTime >= candidate.start) movement = candidate;
+  }
+  if (movement.planet === activePlanet) return;
+
+  activePlanet = movement.planet;
+  favicon.href = `./favicons/${activePlanet}.svg`;
+  for (const row of rows) {
+    if (row.dataset.planet === activePlanet) {
+      row.setAttribute("aria-current", "true");
+      progress.style.setProperty("--progress-color", getComputedStyle(row).getPropertyValue("--planet-color"));
+    } else {
+      row.removeAttribute("aria-current");
+    }
+  }
 }
 
-updateFavicon(index);
+async function startPlayback() {
+  try {
+    await audio.play();
+  } catch (error) {
+    if (error.name === "NotAllowedError") {
+      needsActivation = true;
+      showStatus("Tap anywhere or press Enter to start listening.");
+    } else if (error.name !== "AbortError") {
+      showStatus("The recording couldn't play. Please reload the page.");
+    }
+  }
+}
 
-window.onYouTubeIframeAPIReady = () => {
-  player = new YT.Player("player", {
-    playerVars: {
-      playsinline: 1,
-      origin: window.location.origin,
-    },
-    events: {
-      onReady(event) {
-        event.target.getIframe().title = "The Planets — Berliner Philharmoniker and Herbert von Karajan";
-        playButton.hidden = false;
-        status.textContent = "Starting at a random point. Press play if playback doesn't begin.";
-        event.target.unMute();
-        event.target.setLoop(true);
-        event.target.loadPlaylist({ list: playlist, listType: "playlist", index, startSeconds });
-      },
-      onStateChange(event) {
-        if (event.data === YT.PlayerState.PLAYING) {
-          updateFavicon(event.target.getPlaylistIndex());
-          playButton.hidden = true;
-          status.textContent = "Playing. The suite repeats automatically.";
-        } else if (event.data === YT.PlayerState.PAUSED) {
-          playButton.hidden = false;
-          status.textContent = "Paused. Press play to continue.";
-        }
-      },
-      onAutoplayBlocked() {
-        playButton.hidden = false;
-        status.textContent = "Your browser needs a click to start the music. Press play to join at the selected point.";
-      },
-      onError() {
-        playButton.hidden = true;
-        status.textContent = "YouTube couldn't play this recording here. Open it in YouTube Music below.";
-      },
-    },
-  });
-};
+function initialize() {
+  if (!Number.isFinite(audio.duration) || audio.duration <= 0) {
+    showStatus("The recording couldn't load. Please reload the page.");
+    return;
+  }
+  progress.max = audio.duration;
+  audio.currentTime = Math.random() * audio.duration;
+  updateProgress();
+}
 
-playButton.addEventListener("click", () => {
-  player.unMute();
-  player.playVideo();
+audio.addEventListener("timeupdate", updateProgress);
+audio.addEventListener("playing", () => {
+  needsActivation = false;
+  showStatus("");
+});
+audio.addEventListener("error", () => {
+  needsActivation = false;
+  showStatus("The recording couldn't load. Please reload the page.");
 });
 
-const api = document.createElement("script");
-api.src = "https://www.youtube.com/iframe_api";
-api.addEventListener("error", () => {
-  status.textContent = "The YouTube player couldn't load. Open the recording below.";
+// A gesture only starts blocked autoplay; it never pauses or seeks playback.
+document.addEventListener("click", (event) => {
+  if (needsActivation && !event.target.closest("a")) startPlayback();
 });
-document.head.append(api);
+document.addEventListener("keydown", (event) => {
+  if (needsActivation && !event.repeat && ["Enter", " "].includes(event.key) && !event.target.closest("a")) {
+    event.preventDefault();
+    startPlayback();
+  }
+});
+
+if (audio.readyState >= 1) initialize();
+else audio.addEventListener("loadedmetadata", initialize, { once: true });
+startPlayback();

@@ -2,22 +2,27 @@
 
 A small static site that plays Gustav Holst's *The Planets*, Op. 32, on repeat.
 
-`index.html` contains the player and movement list; `styles.css` controls the
-presentation. `player.js` uses YouTube's IFrame Player API to start at a uniformly
-random second across the 52:02 suite, continue the playlist in order, and loop.
-It attempts audible autoplay on each visit; browsers that block autoplay require
-the listener to press play. There is no build step or backend.
-The seven SVG icons in `favicons/` match the planets; `player.js` updates the
-browser favicon to follow the current movement.
+`index.html` contains a native audio element, a read-only progress bar, and the
+movement list; `styles.css` controls the presentation. `player.js` starts at a
+uniformly random point across the recording and the audio element loops the suite.
+There are no pause, seek, or volume controls. When a browser blocks autoplay, a
+one-time tap or Enter/Space starts playback; the prompt disappears once playing.
+There is no build step or backend.
+
+The active movement, progress bar, and seven SVG favicons use planetary colours.
+Movement onsets in `player.js` were identified from this recording's audio and
+must be updated if the source changes. The progress bar covers the complete suite.
 
 ## Recording
 
-Berliner Philharmoniker, conducted by Herbert von Karajan. The album is credited
-℗ 1981 Deutsche Grammophon GmbH, Berlin. The seven movements stream through the
-visible YouTube player; no audio is hosted in this repository. Playback depends
-on YouTube availability and embedding permissions, and may include ads.
+NYO Canada, conducted by Michael Francis, recorded at Jack Singer Hall, Calgary,
+on August 9, 2015. The complete 47:11 performance streams directly from IMSLP as
+an unchanged 128 kbps stereo MP3. IMSLP lists it under CC BY-NC-ND 4.0; the page
+credits the performers and links to the source and licence. No audio is hosted
+in this repository.
 
-[Recording on YouTube Music](https://music.youtube.com/playlist?list=OLAK5uy_nxaAAl0akbZ3b1GtEV4I6l25bW_NFIdDI)
+[Recording and attribution on IMSLP](https://imslp.org/wiki/Special:ReverseLookup/473859)
+· [NYO Canada's original upload](https://soundcloud.com/nyoc/holst-planets-nyo-2015-calgary)
 
 ## Hosting
 

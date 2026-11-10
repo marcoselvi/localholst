@@ -18,27 +18,26 @@
       </header>
 
       <section aria-label="Listen to The Planets">
-        <div id="player"></div>
-        <p id="playback-status" class="hint" role="status">Loading the player. You can also open the recording below.</p>
-        <button id="play" type="button" hidden>Play The Planets</button>
-        <p class="hint">Join at a random point. The seven movements continue in order, on repeat.</p>
+        <audio id="audio" loop preload="metadata" hidden src="https://s9.imslp.org/files/imglnks/usimg/c/cc/IMSLP473859-PMLP33488-Holst_Planets_Calgary_2015_Aug_9.mp3"></audio>
+        <progress id="progress" value="0" max="1" aria-label="Progress through The Planets"></progress>
+        <p id="playback-status" class="hint" role="status">Loading the recording…</p>
         <noscript><p class="hint">Enable JavaScript to use the player, or open the recording below.</p></noscript>
       </section>
 
       <ol class="movements" aria-label="Movements in playing order">
-        <li><span>Mars</span><span>The Bringer of War</span></li>
-        <li><span>Venus</span><span>The Bringer of Peace</span></li>
-        <li><span>Mercury</span><span>The Winged Messenger</span></li>
-        <li><span>Jupiter</span><span>The Bringer of Jollity</span></li>
-        <li><span>Saturn</span><span>The Bringer of Old Age</span></li>
-        <li><span>Uranus</span><span>The Magician</span></li>
-        <li><span>Neptune</span><span>The Mystic</span></li>
+        <li data-planet="mars"><span>Mars</span><span>The Bringer of War</span></li>
+        <li data-planet="venus"><span>Venus</span><span>The Bringer of Peace</span></li>
+        <li data-planet="mercury"><span>Mercury</span><span>The Winged Messenger</span></li>
+        <li data-planet="jupiter"><span>Jupiter</span><span>The Bringer of Jollity</span></li>
+        <li data-planet="saturn"><span>Saturn</span><span>The Bringer of Old Age</span></li>
+        <li data-planet="uranus"><span>Uranus</span><span>The Magician</span></li>
+        <li data-planet="neptune"><span>Neptune</span><span>The Mystic</span></li>
       </ol>
 
       <footer>
-        <p>Berliner Philharmoniker · Herbert von Karajan, conductor</p>
-        <p>℗ 1981 Deutsche Grammophon GmbH, Berlin · Streamed via YouTube.
-          <a href="https://music.youtube.com/playlist?list=OLAK5uy_nxaAAl0akbZ3b1GtEV4I6l25bW_NFIdDI">Open in YouTube Music</a>
+        <p>NYO Canada · Michael Francis, conductor · Calgary, 2015</p>
+        <p><a href="https://imslp.org/wiki/Special:ReverseLookup/473859">Recording via IMSLP</a> ·
+          <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="license">CC BY-NC-ND 4.0</a>
         </p>
       </footer>
     </main>

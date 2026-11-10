@@ -43,24 +43,29 @@ section {
   margin: 2rem 0;
 }
 
-#player {
+#progress {
+  --progress-color: #d7bc83;
+  appearance: none;
   display: block;
   width: 100%;
-  height: auto;
-  min-height: 200px;
-  aspect-ratio: 16 / 9;
+  height: 0.4rem;
   border: 0;
-  background: #000;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: #2a3039;
+  pointer-events: none;
 }
 
-button {
-  padding: 0.65rem 1rem;
-  border: 1px solid #d7bc83;
-  border-radius: 0.3rem;
-  background: transparent;
-  color: #d7bc83;
-  font: inherit;
-  cursor: pointer;
+#progress::-webkit-progress-bar {
+  background: #2a3039;
+}
+
+#progress::-webkit-progress-value {
+  background: var(--progress-color);
+}
+
+#progress::-moz-progress-bar {
+  background: var(--progress-color);
 }
 
 .hint,
@@ -75,13 +80,36 @@ footer {
 }
 
 .movements li {
-  padding: 0.65rem 0 0.65rem 0.5rem;
+  padding: 0.65rem 0.75rem;
+  border-left: 2px solid transparent;
   border-bottom: 1px solid #2a3039;
+}
+
+.movements [data-planet="mars"] { --planet-color: #df7954; }
+.movements [data-planet="venus"] { --planet-color: #e9c987; }
+.movements [data-planet="mercury"] { --planet-color: #c9c6bd; }
+.movements [data-planet="jupiter"] { --planet-color: #d79b72; }
+.movements [data-planet="saturn"] { --planet-color: #ead5a9; }
+.movements [data-planet="uranus"] { --planet-color: #a7dce0; }
+.movements [data-planet="neptune"] { --planet-color: #89b0f2; }
+
+.movements li[aria-current="true"] {
+  color: var(--planet-color);
+  border-left-color: var(--planet-color);
+  background: color-mix(in srgb, var(--planet-color) 8%, transparent);
+}
+
+.movements li[aria-current="true"] span:first-child {
+  font-weight: 700;
 }
 
 .movements li span:last-child {
   display: block;
   font-size: 0.85rem;
+}
+
+.movements li[aria-current="true"] span:last-child {
+  color: inherit;
 }
 
 footer {
@@ -93,8 +121,7 @@ a {
   text-underline-offset: 0.2em;
 }
 
-a:focus-visible,
-button:focus-visible {
+a:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 4px;
 }
