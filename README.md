@@ -3,23 +3,27 @@
 A small static site that plays Gustav Holst's *The Planets*, Op. 32, on repeat.
 
 `index.html` contains the player and movement list; `styles.css` controls the
-presentation. The native audio player loops the complete recording after the
-listener presses play. Audio is streamed from Wikimedia Commons and is not
-downloaded until playback begins. There is no JavaScript, build step, or backend.
+presentation. `player.js` uses YouTube's IFrame Player API to start at a uniformly
+random second across the 52:02 suite, continue the playlist in order, and loop.
+It attempts audible autoplay on each visit; browsers that block autoplay require
+the listener to press play. There is no build step or backend.
+The seven SVG icons in `favicons/` match the planets; `player.js` updates the
+browser favicon to follow the current movement.
 
 ## Recording
 
-The London Symphony Orchestra, conducted by Gustav Holst, in the historical
-Columbia recording identified as 1922–23. Wikimedia Commons identifies the
-recording as public domain. The player uses its MP3 derivative.
+Berliner Philharmoniker, conducted by Herbert von Karajan. The album is credited
+℗ 1981 Deutsche Grammophon GmbH, Berlin. The seven movements stream through the
+visible YouTube player; no audio is hosted in this repository. Playback depends
+on YouTube availability and embedding permissions, and may include ads.
 
-[Recording, attribution, and public-domain information](https://commons.wikimedia.org/wiki/File:Holst_-_The_Planets_(Columbia_1922-23).flac)
+[Recording on YouTube Music](https://music.youtube.com/playlist?list=OLAK5uy_nxaAAl0akbZ3b1GtEV4I6l25bW_NFIdDI)
 
 ## Hosting
 
 GitHub Pages publishes the root of the `main` branch. In the repository's
 **Settings → Pages**, choose **Deploy from a branch**, then **main / (root)**.
-The `.nojekyll` file disables Jekyll processing, so the HTML and CSS are served
+The `.nojekyll` file disables Jekyll processing, so the static files are served
 directly. Pushing changes to `main` updates the site automatically.
 
 `CNAME` declares `localholst.uk` as the custom domain. Set the same custom domain

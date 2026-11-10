@@ -43,9 +43,24 @@ section {
   margin: 2rem 0;
 }
 
-audio {
+#player {
   display: block;
   width: 100%;
+  height: auto;
+  min-height: 200px;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  background: #000;
+}
+
+button {
+  padding: 0.65rem 1rem;
+  border: 1px solid #d7bc83;
+  border-radius: 0.3rem;
+  background: transparent;
+  color: #d7bc83;
+  font: inherit;
+  cursor: pointer;
 }
 
 .hint,
@@ -78,7 +93,8 @@ a {
   text-underline-offset: 0.2em;
 }
 
-a:focus-visible {
+a:focus-visible,
+button:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 4px;
 }

@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Gustav Holst's The Planets, on repeat.">
     <title>localholst — The Planets, on repeat</title>
+    <link id="favicon" rel="icon" type="image/svg+xml" href="./favicons/mars.svg">
     <link rel="stylesheet" href="./styles.css">
+    <script src="./player.js" defer></script>
   </head>
   <body>
     <main>
@@ -16,11 +18,11 @@
       </header>
 
       <section aria-label="Listen to The Planets">
-        <audio controls loop preload="none" aria-label="The complete Planets suite">
-          <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/5/5f/Holst_-_The_Planets_%28Columbia_1922-23%29.flac/Holst_-_The_Planets_%28Columbia_1922-23%29.flac.mp3" type="audio/mpeg">
-          Your browser does not support audio playback. You can listen using the recording link below.
-        </audio>
-        <p class="hint">Press play to begin. The full seven-movement suite repeats automatically.</p>
+        <div id="player"></div>
+        <p id="playback-status" class="hint" role="status">Loading the player. You can also open the recording below.</p>
+        <button id="play" type="button" hidden>Play The Planets</button>
+        <p class="hint">Join at a random point. The seven movements continue in order, on repeat.</p>
+        <noscript><p class="hint">Enable JavaScript to use the player, or open the recording below.</p></noscript>
       </section>
 
       <ol class="movements" aria-label="Movements in playing order">
@@ -34,9 +36,9 @@
       </ol>
 
       <footer>
-        <p>London Symphony Orchestra · Gustav Holst, conductor · 1922–23</p>
-        <p>Historical public-domain recording.
-          <a href="https://commons.wikimedia.org/wiki/File:Holst_-_The_Planets_(Columbia_1922-23).flac">Source and recording details</a>
+        <p>Berliner Philharmoniker · Herbert von Karajan, conductor</p>
+        <p>℗ 1981 Deutsche Grammophon GmbH, Berlin · Streamed via YouTube.
+          <a href="https://music.youtube.com/playlist?list=OLAK5uy_nxaAAl0akbZ3b1GtEV4I6l25bW_NFIdDI">Open in YouTube Music</a>
         </p>
       </footer>
     </main>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs><clipPath id="planet"><circle cx="32" cy="32" r="23"/></clipPath></defs>
+  <rect width="64" height="64" rx="14" fill="#11151c"/>
+  <circle cx="32" cy="32" r="23" fill="#4d7ed9"/>
+  <g clip-path="url(#planet)" fill="none">
+    <path d="M8 23q24 10 48 0M8 44q24 10 48 0" stroke="#3157a9" stroke-width="6"/>
+    <path d="M9 29q23 10 46 0" stroke="#89b0f2" stroke-width="3"/>
+  </g>
+  <ellipse cx="25" cy="39" rx="7" ry="4" fill="#254991"/>
+</svg>
