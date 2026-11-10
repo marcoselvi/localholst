@@ -8,6 +8,9 @@ const movements = [
   { planet: "uranus", start: 2100.6 },
   { planet: "neptune", start: 2452.8 },
 ];
+// Use a fixed duration so every browser shares the same UTC timeline.
+const suiteDurationMs = 2_830_800;
+const syncIntervalMs = 10_000;
 const audio = document.getElementById("audio");
 const progress = document.getElementById("progress");
 const favicon = document.getElementById("favicon");
@@ -15,6 +18,7 @@ const playbackStatus = document.getElementById("playback-status");
 const rows = document.querySelectorAll(".movements li");
 let activePlanet;
 let needsActivation = false;
+let lastSync = -Infinity;
 
 function showStatus(message) {
   playbackStatus.textContent = message;
@@ -41,7 +45,22 @@ function updateProgress() {
   }
 }
 
+function synchronizePlayback(force = false) {
+  if (!Number.isFinite(audio.duration) || audio.duration <= 0 || audio.seeking) return;
+
+  const position = (Date.now() % suiteDurationMs) / 1000;
+  const difference = Math.abs(audio.currentTime - position);
+  const drift = Math.min(difference, Math.abs(suiteDurationMs / 1000 - difference));
+  // Allow seeks to finish buffering before correcting again.
+  if (!force && (drift <= 0.75 || performance.now() - lastSync < syncIntervalMs)) return;
+
+  audio.currentTime = Math.min(position, audio.duration);
+  lastSync = performance.now();
+  updateProgress();
+}
+
 async function startPlayback() {
+  synchronizePlayback(true);
   try {
     await audio.play();
   } catch (error) {
@@ -59,9 +78,8 @@ function initialize() {
     showStatus("The recording couldn't load. Please reload the page.");
     return;
   }
-  progress.max = audio.duration;
-  audio.currentTime = Math.random() * audio.duration;
-  updateProgress();
+  progress.max = suiteDurationMs / 1000;
+  synchronizePlayback(true);
 }
 
 function startWhenReady() {
@@ -73,13 +91,14 @@ audio.addEventListener("canplay", startWhenReady, { once: true });
 audio.addEventListener("playing", () => {
   needsActivation = false;
   showStatus("");
+  synchronizePlayback();
 });
 audio.addEventListener("error", () => {
   needsActivation = false;
   showStatus("The recording couldn't load. Please reload the page.");
 });
 
-// A gesture only starts blocked autoplay; it never pauses or seeks playback.
+// A gesture joins the current UTC position if autoplay was blocked.
 document.addEventListener("click", (event) => {
   if (needsActivation && !event.target.closest("a")) startPlayback();
 });
@@ -89,6 +108,12 @@ document.addEventListener("keydown", (event) => {
     startPlayback();
   }
 });
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && !audio.paused) synchronizePlayback();
+});
+setInterval(() => {
+  if (!audio.paused) synchronizePlayback();
+}, syncIntervalMs);
 
 if (audio.readyState >= 1) initialize();
 else audio.addEventListener("loadedmetadata", initialize, { once: true });
